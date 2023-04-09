@@ -7,6 +7,7 @@
 using namespace std;
 
 Linkedlist List;
+int timing;
 
 GraphNode::GraphNode(int id) : m_id(id), m_distance(0), m_visited(false){}
 
@@ -36,11 +37,11 @@ std::vector<GraphEdge*> GraphNode::getEdges() const {
     return m_edges;
 }
 
-vector<GraphNode *> GraphNode::SNQ(GraphNode* Node) const{
+vector<GraphNode *> GraphNode::SNQ() const{
     int i = 0;
-    vector<GraphEdge *> edges = Node->getEdges();
+    vector<GraphEdge *> edges = this->getEdges();
     vector<GraphNode *> neighbours;
-    while (edges[i] != NULL)
+    for (size_t i = 0; i < edges.size(); i++)
     {
         neighbours.push_back(edges[i]->getDst());
     }
@@ -49,6 +50,10 @@ vector<GraphNode *> GraphNode::SNQ(GraphNode* Node) const{
 
 int GraphNode::getDist() const {
     return m_distance;
+}
+
+int  GraphNode::getFinish() const {
+    return m_finish;
 }
 
 void GraphNode::setVerif(bool boolean){
@@ -120,7 +125,7 @@ void GraphNode::BFS(vector<GraphNode*> graph){
 
 void GraphNode::DFS(vector<GraphNode*> graph){
     
-
+    
     //Default : nothing as been visited and the distance are 0
     for (int i = 0; i < graph.size(); i++)
     {
@@ -128,13 +133,13 @@ void GraphNode::DFS(vector<GraphNode*> graph){
         graph[i]->m_pred = NULL;
     }
 
-    int time = 0;
+    timing = 0;
 
     for (int i = 0; i <graph.size(); i++)
     {
         if (!graph[i]->m_visited)
         {   
-                DFS_VISIT(graph[i],time);
+                DFS_VISIT(graph[i]);
 
         }
         
@@ -143,27 +148,32 @@ void GraphNode::DFS(vector<GraphNode*> graph){
     
 }
 
-void DFS_VISIT(GraphNode* Node, int time){
+void DFS_VISIT(GraphNode* Node){
 
-    time = time + 1;
-    Node->setDistance(time);
+    timing = timing + 1;
+    Node->setDistance(timing);
     Node->setVerif(true);
     vector<GraphEdge*> list = Node->getEdges();
     for (int j = 0; j < list.size(); j++)
     {
         if (!(list[j]->getDst()->getVerif()))
         {
-            DFS_VISIT(list[j]->getDst(),time);
+            list[j]->getDst()->setPred(Node);
+            DFS_VISIT(list[j]->getDst());
         }
         
     }
-    time = time + 1;
-    Node->setFinish(time);
+    timing = timing + 1;
+    Node->setFinish(timing);
     List =  insert_head(List,Node);
     
     
 
     
+}
+
+void GraphNode::setPred(GraphNode* Node){
+    m_pred = Node;
 }
 
 void GraphNode::ShortestPath(GraphNode* Destination){
@@ -200,3 +210,4 @@ Linkedlist GraphNode::Topological_sort(vector<GraphNode*> graph){
     return List;
 
 }
+

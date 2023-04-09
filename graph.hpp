@@ -36,9 +36,10 @@ class GraphNode
         int getId() const;
         bool getVerif() const;
         int getDist() const;
+        int  getFinish() const;
         std::vector<GraphEdge*>getEdges() const;
         //simple neighbourhood queries
-        std::vector<GraphNode *> SNQ(GraphNode* Node) const;
+        std::vector<GraphNode *> SNQ() const;
         void ShortestPath(GraphNode* Destination);
         void BFS(std::vector<GraphNode*> graph);
         void DFS(std::vector<GraphNode*> graph);
@@ -50,6 +51,7 @@ class GraphNode
         void setVerif(bool boolean);
         void setDistance(int distance);
         void setFinish(int time);
+        void setPred(GraphNode* Node);
 
 
     private:
@@ -64,7 +66,7 @@ class GraphNode
 
 };
 
-void DFS_VISIT(GraphNode* Node, int time);
+void DFS_VISIT(GraphNode* Node);
 
 //GRAPH EDGE
 
@@ -100,7 +102,8 @@ class Graph
         //ACCESSOR
         std::vector<GraphNode *> getList();
         std::vector<GraphEdge *> getEdgelist();
-        Graph transposeGraph(Graph* graph);
+        void transposeGraph(Graph* graph);
+        std::vector<std::vector<GraphNode *>> SCC();
     private :
         std::vector<GraphNode *> v_list;
         std::vector<GraphEdge *> e_list;
