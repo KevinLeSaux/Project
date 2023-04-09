@@ -2,25 +2,108 @@
 #define DEF_GRAPH
 
 #include <vector>
-#include "graphedge.hpp"
-#include "graphnode.hpp"
+#include "graph.hpp"
+
 class GraphNode;
+
+//LINKED LIST FOR TOPOLOGICAL SORT
+typedef struct elem {
+
+GraphNode *val;
+struct elem *next;
+
+
+}DListElement;
+
+typedef DListElement *Linkedlist;
+
+Linkedlist insert_head(Linkedlist l, GraphNode *Node);
+void print_linked_list(Linkedlist l);
+
+
 class GraphEdge;
-class Graph
+
+//GRAPHNODE
+
+class GraphNode
 {
     public:
         //Constructor
-       Graph();
+        GraphNode(int id);
+
+
         //Accessors
-        std::vector<GraphNode *> getVList();
+        int getId() const;
+        bool getVerif() const;
+        int getDist() const;
+        std::vector<GraphEdge*>getEdges() const;
+        //simple neighbourhood queries
+        std::vector<GraphNode *> SNQ(GraphNode* Node) const;
+        void ShortestPath(GraphNode* Destination);
+        void BFS(std::vector<GraphNode*> graph);
+        void DFS(std::vector<GraphNode*> graph);
+        
+        Linkedlist Topological_sort(std::vector<GraphNode*> graph);
         
         //Mutator
+        void add_edge(GraphEdge* edge);
+        void setVerif(bool boolean);
+        void setDistance(int distance);
+        void setFinish(int time);
 
-        std::vector<GraphNode *> m_list;
+
     private:
+        int m_id;
+        int m_distance;
+        int m_finish;
+        bool m_visited;
+        GraphNode* m_pred;
+        std::vector<GraphEdge*> m_edges;
         
         
+
+};
+
+void DFS_VISIT(GraphNode* Node, int time);
+
+//GRAPH EDGE
+
+class GraphEdge
+{
+    public:
+        //Constructor
+        GraphEdge(GraphNode* src, GraphNode* dst, double weight);
+
+
+        //Accessors
+        GraphNode* getSrc() const;
+        GraphNode* getDst() const;
+        double getWeight() const;
+
+    private:
+        GraphNode* m_src;
+        GraphNode* m_dst;
+        double m_weight;
         
+
+};
+
+
+//GRAPH
+
+class Graph
+{
+    public : 
+        //MUTATOR
+        void insert_node(int nbVert);
+        void insert_edge(GraphEdge* Edge);
+        //ACCESSOR
+        std::vector<GraphNode *> getList();
+        std::vector<GraphEdge *> getEdgelist();
+        Graph transposeGraph(Graph* graph);
+    private :
+        std::vector<GraphNode *> v_list;
+        std::vector<GraphEdge *> e_list;
 
 };
 

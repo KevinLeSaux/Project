@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include "graphnode.hpp"
-#include "graphedge.hpp"
 #include "graph.hpp"
 
 
@@ -36,6 +34,17 @@ void GraphNode::add_edge(GraphEdge* edge) {
 
 std::vector<GraphEdge*> GraphNode::getEdges() const {
     return m_edges;
+}
+
+vector<GraphNode *> GraphNode::SNQ(GraphNode* Node) const{
+    int i = 0;
+    vector<GraphEdge *> edges = Node->getEdges();
+    vector<GraphNode *> neighbours;
+    while (edges[i] != NULL)
+    {
+        neighbours.push_back(edges[i]->getDst());
+    }
+    return neighbours;
 }
 
 int GraphNode::getDist() const {

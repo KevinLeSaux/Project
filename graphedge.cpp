@@ -1,7 +1,5 @@
 #include <iostream>
 #include <vector>
-#include "graphnode.hpp"
-#include "graphedge.hpp"
 #include "graph.hpp"
 using namespace std;
 
