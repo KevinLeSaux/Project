@@ -4,11 +4,10 @@
 
 using namespace std;
 
-
+vector<vector<GraphNode *>> result;
 
 void Graph::insert_node(int nbVert){
     //VERTICES
-    cout << "nbvert = " << nbVert <<endl;
     for (int i = 0; i < nbVert; i++)
     {
         auto vert = new GraphNode(i);
@@ -51,20 +50,59 @@ void Graph::transposeGraph(Graph* graph){
     
 }
 
-std::vector<std::vector<GraphNode *>> Graph::SCC(){
+vector<vector<GraphNode *>> Graph::SCC(){
 
     vector<GraphNode *> Initgraph = this->getList();
-    Initgraph[2]->DFS(Initgraph);
     
-    Graph GT;
-    this->transposeGraph(&GT);
-    
-    vector<GraphNode *> Transgraph = GT.getList();
+    Linkedlist SortedGraph = NULL;
+    //USES DFS AND I GET THE SORTED LIST
+    SortedGraph = Initgraph[1]->Topological_sort(Initgraph);
 
+    //print_linked_list(SortedGraph);
+
+    //TRANSPOSE OF THE GRAPH
+    Graph GT;
     
-    vector<GraphNode *> GTlist = GT.getList();
-    cout << Initgraph[3]->getDist() << endl;
-    cout << Initgraph[3]->getFinish() << endl;
-    vector<std::vector<GraphNode *>> test;
-    return test;
+    this->transposeGraph(&GT);
+    vector<GraphNode *> Transgraph = GT.getList();
+    
+    
+
+    int count = 0;
+    int i = 0;
+
+    while (SortedGraph!=NULL)
+    {
+      
+        
+        if (!Transgraph[SortedGraph->val->getId()]->getVerif())
+        { 
+
+            result.push_back(vector<GraphNode *>{Transgraph[SortedGraph->val->getId()]});
+
+            DFS_VISIT_SCC(Transgraph[SortedGraph->val->getId()],count);
+            count = count + 1;
+
+        }
+        SortedGraph = SortedGraph->next;
+        i = i +1;
+    }
+    
+    return result;
+}
+
+void DFS_VISIT_SCC(GraphNode* Node,int count){
+
+    Node->setVerif(true);
+    vector<GraphEdge*> list = Node->getEdges();
+    for (int j = 0; j < list.size(); j++)
+    {
+        if (!(list[j]->getDst()->getVerif()))
+        {
+            result[count].push_back(list[j]->getDst()); 
+            list[j]->getDst()->setPred(Node);
+            DFS_VISIT_SCC(list[j]->getDst(),count);
+        }
+        
+    }
 }

@@ -52,12 +52,12 @@ int main(){
     cout << endl;
 
     graph[0]->DFS(graph);
-    
-    Linkedlist List = NULL;
-    
+    /*
     cout << "Topological sort : " << endl;
-    List = graph[1]->Topological_sort(graph);
-    print_linked_list(List);
+    Linkedlist SortedGraph = NULL;
+    SortedGraph = graph[1]->Topological_sort(graph);
+    print_linked_list(SortedGraph);
+    */
 /*
     cout << "Transpose" << endl;
     
@@ -67,8 +67,22 @@ int main(){
     vector<GraphNode *> GTlist = GT.getList();
     GTlist[4]->BFS(GTlist);
     */
+ 
+   cout << endl;
+   //Strongly connected component
+   cout << "Strongly connected component" << endl;
+    vector<vector<GraphNode *>> component = test.SCC();
     
-    test.SCC();
+    for (int i = 0; i < component.size(); i++)
+    {
+        for (int j = 0; j < component[i].size(); j++)
+        {
+            cout << component[i][j]->getId() << " " ;
+        }
+        cout << endl;
+    }
+    
+
     return 0;
     
 }

@@ -9,13 +9,15 @@ using namespace std;
 Linkedlist List;
 int timing;
 
-GraphNode::GraphNode(int id) : m_id(id), m_distance(0), m_visited(false){}
+int visit;
+
+GraphNode::GraphNode(int id) : m_id(id), m_distance(0), m_visited(false), m_pred(NULL) {}
 
 void print_linked_list(Linkedlist l){
 
 	if(l != NULL){
 	
-		cout << l->val->getId() << " ";
+		cout << l->val->getId() << " finish : " << l->val->getFinish() << endl;
 		print_linked_list(l->next);
 	
 	}else{
@@ -171,6 +173,8 @@ void DFS_VISIT(GraphNode* Node){
 
     
 }
+
+//void GraphNode::DFS_SCC(){}
 
 void GraphNode::setPred(GraphNode* Node){
     m_pred = Node;

@@ -110,4 +110,6 @@ class Graph
 
 };
 
+void DFS_VISIT_SCC(GraphNode* Node,int count);
+
 #endif
