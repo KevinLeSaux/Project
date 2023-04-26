@@ -8,28 +8,32 @@ using namespace std;
 
 int main(){
     
-    //Initalisation of my graph
-    
+    //Initalisation of my graphs
+
+    //Graph for Strongly connected component
+    /*
     Graph test;
     test.insert_node(8);
     
     vector<GraphNode *> graph = test.getList();
     
-    //EDGES
-    GraphEdge edge0to1(graph[0],graph[1],4);
-    GraphEdge edge1to2(graph[1],graph[2],0);
-    GraphEdge edge2to3(graph[2],graph[3],0);
-    GraphEdge edge3to2(graph[3],graph[2],0);
-    GraphEdge edge3to7(graph[3],graph[7],0);
-    GraphEdge edge7to7(graph[7],graph[7],0);
-    GraphEdge edge6to7(graph[6],graph[7],0);
-    GraphEdge edge5to6(graph[5],graph[6],0);
-    GraphEdge edge2to6(graph[2],graph[6],0);
-    GraphEdge edge6to5(graph[6],graph[5],0);
-    GraphEdge edge1to4(graph[1],graph[4],0);
-    GraphEdge edge4to0(graph[5],graph[0],0);
-    GraphEdge edge4to5(graph[4],graph[5],0);
     
+    //EDGES
+    GraphEdge edge0to1(graph[0],graph[1],4,&test);
+    GraphEdge edge1to2(graph[1],graph[2],7,&test);
+    GraphEdge edge2to3(graph[2],graph[3],3,&test);
+    GraphEdge edge3to2(graph[3],graph[2],1,&test);
+    GraphEdge edge3to7(graph[3],graph[7],9,&test);
+    GraphEdge edge7to7(graph[7],graph[7],4,&test);
+    GraphEdge edge6to7(graph[6],graph[7],2,&test);
+    GraphEdge edge5to6(graph[5],graph[6],4,&test);
+    GraphEdge edge2to6(graph[2],graph[6],1,&test);
+    GraphEdge edge6to5(graph[6],graph[5],8,&test);
+    GraphEdge edge1to4(graph[1],graph[4],9,&test);
+    GraphEdge edge4to0(graph[5],graph[0],0,&test);
+    GraphEdge edge4to5(graph[4],graph[5],7,&test);
+    
+
     graph[0]->add_edge(&edge0to1);
     graph[1]->add_edge(&edge1to2);
     graph[1]->add_edge(&edge1to4);
@@ -44,11 +48,45 @@ int main(){
     graph[6]->add_edge(&edge6to7);
     graph[7]->add_edge(&edge7to7);
 
-    cout << "Start : " << graph[1]->getId() << endl;
-    graph[1]->BFS(graph);
+    */
+
+    //Graph for Bellman-Ford
+
+    Graph test;
+    test.insert_node(5);
+
+    vector<GraphNode *> graph = test.getList();
+
+    //EDGES
+
+    GraphEdge edge0to1(graph[0],graph[1],6,&test);
+    GraphEdge edge0to3(graph[0],graph[3],7,&test);
+    GraphEdge edge4to0(graph[4],graph[0],2,&test);
+    GraphEdge edge1to3(graph[1],graph[3],8,&test);
+    GraphEdge edge1to2(graph[1],graph[2],5,&test);
+    GraphEdge edge2to1(graph[2],graph[1],-2,&test);
+    GraphEdge edge3to4(graph[3],graph[4],9,&test);
+    GraphEdge edge3to2(graph[3],graph[2],-3,&test);
+    GraphEdge edge1to4(graph[1],graph[4],-4,&test);
+    GraphEdge edge4to2(graph[4],graph[2],7,&test);
+
+    graph[0]->add_edge(&edge0to1);
+    graph[0]->add_edge(&edge0to3);
+    graph[4]->add_edge(&edge4to0);
+    graph[1]->add_edge(&edge1to3);
+    graph[1]->add_edge(&edge1to2);
+    graph[2]->add_edge(&edge2to1);
+    graph[3]->add_edge(&edge3to4);
+    graph[3]->add_edge(&edge3to2);
+    graph[1]->add_edge(&edge1to4);
+    graph[4]->add_edge(&edge4to2);
+    
+
+    cout << "Start : " << graph[0]->getId() << endl;
+    graph[0]->BFS(graph);
 
     cout << "Shortest Path : " << endl;
-    graph[1]->ShortestPath(graph[7]);
+    graph[0]->ShortestPath(graph[4]);
     cout << endl;
 
     graph[0]->DFS(graph);
@@ -82,7 +120,17 @@ int main(){
         cout << endl;
     }
     
-
+    
+    Graph A;
+    test.Kruskal(&A);
+    
+    cout << "Shortest path with Bellman-Ford" << endl;
+    bool ford;
+    ford = test.Bellman_ford(graph[1]);
+    //graph[1]->BFS(graph);
+    cout << ford << endl;
+    cout << true << endl;
+    graph[0]->ShortestPath(graph[4]);
     return 0;
     
 }

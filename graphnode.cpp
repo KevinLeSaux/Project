@@ -8,7 +8,7 @@ using namespace std;
 
 Linkedlist List;
 int timing;
-
+const int INF = 0x3f3f3f3f;
 int visit;
 
 GraphNode::GraphNode(int id) : m_id(id), m_distance(0), m_visited(false), m_pred(NULL) {}
@@ -29,6 +29,10 @@ int GraphNode::getId() const {
 
     return m_id;
 
+}
+
+int GraphNode::getKey() const {
+    return m_key;
 }
 
 void GraphNode::add_edge(GraphEdge* edge) {
@@ -60,6 +64,10 @@ int  GraphNode::getFinish() const {
 
 void GraphNode::setVerif(bool boolean){
     m_visited = boolean;
+}
+
+void GraphNode::setKey(int key){
+    m_key = key;
 }
 
 void GraphNode::setDistance(int distance){
@@ -213,5 +221,49 @@ Linkedlist GraphNode::Topological_sort(vector<GraphNode*> graph){
     graph[0]->DFS(graph);
     return List;
 
+}
+
+void GraphNode::make_set(){
+
+    this->parent = this;
+    this->rank = 0;
+
+}
+
+GraphNode* GraphNode::find_set(){
+    if (this != this->parent)
+    {
+        this->parent = this->parent->find_set();
+    }
+    return this->parent;
+}
+
+void GraphNode::link(GraphNode* Node){
+
+    if(this->rank > Node->rank){
+        Node->parent = this;
+    }else{
+        this->parent = Node;
+        if (this->rank == Node->rank)
+        {
+            Node->rank = Node->rank+1;
+        }
+        
+    }
+
+}
+
+void GraphNode::unionSet(GraphNode *Node){
+    this->find_set()->link(Node->find_set());
+}
+
+void GraphNode::Initialize_single_source(std::vector<GraphNode*> graph){
+    for (int i = 0; i < graph.size(); i++)
+    {
+        graph[i]->m_distance = INF;
+        graph[i]->m_pred = NULL;
+    }
+    this->m_distance = 0;
+    
 }
 
