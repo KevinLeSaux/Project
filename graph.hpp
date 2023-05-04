@@ -38,10 +38,12 @@ class GraphNode
         int getDist() const;
         int  getFinish() const;
         int getKey() const;
+        GraphNode *getPred() const;
         std::vector<GraphEdge*>getEdges() const;
         //simple neighbourhood queries
         std::vector<GraphNode *> SNQ() const;
         void ShortestPath(GraphNode* Destination);
+        void PairShortestPath(GraphNode* Destination, std::vector<std::vector<GraphNode *>> predGraph);
         void BFS(std::vector<GraphNode*> graph);
         void DFS(std::vector<GraphNode*> graph);
         void Initialize_single_source(std::vector<GraphNode*> graph);
@@ -58,6 +60,8 @@ class GraphNode
         GraphNode* find_set();
         void link(GraphNode* Node);
         void unionSet(GraphNode *Node);
+        
+        
 
     private:
         int m_id;
@@ -109,8 +113,13 @@ class Graph
         void insert_node(int nbVert);
         void insert_edge(GraphEdge* Edge);
         void setEdgeList(std::vector<GraphEdge *> EdgeList);
+        //WITH NEGATIVE WEIGHT
         bool Bellman_ford(GraphNode *source);
-
+        void DAG_shortest_paths(GraphNode *source);
+        //NONNEGATIVE WEIGHT
+        void Dijkstra(GraphNode *source);
+        void floyd_marshall();
+        std::vector<std::vector<int>> Slow_all_pairs_shortest_paths();
 
         //ACCESSOR
         std::vector<GraphNode *> getList();
@@ -119,17 +128,19 @@ class Graph
         std::vector<std::vector<GraphNode *>> SCC();
         void Kruskal(Graph* temp);
         void MST_PRIM(Graph* temp, GraphNode* start);
+        std::vector<std::vector<int>> ListtoMatrix();
 
     private :
         std::vector<GraphNode *> v_list;
         std::vector<GraphEdge *> e_list;
 
 };
+std::vector<std::vector<int>> Extended_shortest_path(std::vector<std::vector<int>> L, std::vector<std::vector<int>> W);
 
 class Compare {
 public:
     bool operator()(GraphNode *a, GraphNode *b) {
-        return a->getKey() > b->getKey();  // returns true if a has higher priority than b (i.e., a < b)
+        return a->getDist() > b->getDist();  // returns true if a has higher priority than b (i.e., a < b)
     }
 };
 

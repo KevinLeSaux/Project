@@ -226,15 +226,14 @@ bool Graph::Bellman_ford(GraphNode *source){
     vector<GraphEdge *> EdgeList = this->getEdgeList();
 
     source->Initialize_single_source(graph);
-    
 
     //for i = 1 to |G.V| - 1 in pdf/book
-    for (int i = 1; i < graph.size() ; i++)
+    for (int i = 0; i < graph.size() ; i++)
     {
         //for each edge (u,v) in G.edges
         for (int j = 0; j < EdgeList.size(); j++)
         {
-            EdgeList[i]->relax();
+            EdgeList[j]->relax();
         }
     }    
     for (int i = 0; i < EdgeList.size(); i++)
@@ -249,5 +248,153 @@ bool Graph::Bellman_ford(GraphNode *source){
     }
     
     return true;
+}
+
+void Graph::DAG_shortest_paths(GraphNode *source){
+
+    vector<GraphNode *> Initgraph = this->getList();
+    
+    Linkedlist SortedGraph = NULL;
+
+    SortedGraph = Initgraph[1]->Topological_sort(Initgraph);
+
+    source->Initialize_single_source(Initgraph);
+
+    while (SortedGraph != NULL)
+    {
+        GraphNode *Node = SortedGraph->val;
+        vector<GraphEdge *> EList = Node->getEdges();
+        for (int i = 0; i < EList.size(); i++)
+        {
+            EList[i]->relax();
+        }
+
+        SortedGraph = SortedGraph->next;
+    }
+    
+    
+
+}
+
+void Graph::Dijkstra(GraphNode *source){
+    vector<GraphNode *> Initgraph = this->getList();
+    source->Initialize_single_source(Initgraph);
+
+    //Min priority queue
+    priority_queue<GraphNode *, vector<GraphNode *>, Compare> Q;
+    // Q = G.V 
+    for (int i = 0; i< v_list.size(); i++)
+    {
+        Q.push(v_list[i]);
+    }
+
+    while (!Q.empty())
+    {
+        GraphNode *U = Q.top();
+        Q.pop();
+        vector<GraphEdge *> EdgeList = U->getEdges();
+        for (int i = 0; i < EdgeList.size(); i++)
+        {
+            EdgeList[i]->relax();
+        }
+        
+    }
+    
+}
+
+void Graph::floyd_marshall(){
+    //GET THE ADJACENCY MATRIX OF THE GRAPH
+    vector<vector<int>> graph = this->ListtoMatrix();
+    //N NUMBER OF ROWS/COLUMN
+    int n = graph.size();
+    //D = W
+    vector<vector<int>> D = graph;
+
+    for (int k = 0; k < n; k++)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                D[i][j] = min(D[i][j],D[i][k] + D[k][j]);
+            }
+            
+        }
+        
+    }
+    
+}
+
+vector<vector<int>> Graph::ListtoMatrix(){
+    //Compute MATRIX W
+    vector<GraphNode *> Vlist = this->getList();
+
+    int num_vertices = Vlist.size();
+
+    // Create an n x n matrix initialized with INF
+    vector<vector<int>> adj_matrix(num_vertices, vector<int>(num_vertices, INF));
+
+    // Iterate through each vertex and its neighbors, marking the corresponding entry in the matrix as 1
+    for (int vertex = 0; vertex < num_vertices; vertex++) {
+        vector<GraphNode *> Nlist = Vlist[vertex]->SNQ();
+        vector<GraphEdge *> Elist = Vlist[vertex]->getEdges();
+        for (int neighbor = 0; neighbor < Nlist.size(); neighbor++) {
+            
+            
+            if (Nlist[neighbor])
+            {
+                adj_matrix[vertex][Nlist[neighbor]->getId()] = Elist[neighbor]->getWeight();
+
+            }
+            
+        }
+    }
+    for (int i = 0; i < num_vertices; i++)
+    {
+        for (int j = 0; j < num_vertices; j++)
+        {
+            if (i == j)
+            {
+                adj_matrix[i][j] = 0;
+            }
+            
+        }
+        
+    }
+    
+    return adj_matrix;
+}
+
+vector<vector<int>> Graph::Slow_all_pairs_shortest_paths(){
+    vector<vector<int>> W = this->ListtoMatrix();
+    vector<vector<int>> L = W;
+    int n = W.size();
+    for (int m = 2; m < n ; m++)
+    {
+        L = Extended_shortest_path(L,W);
+    }
+    return L;
+    
+}
+
+vector<vector<int>> Extended_shortest_path(vector<vector<int>> L, vector<vector<int>> W){
+    int n = L.size();
+    vector<vector<int>> L2(n, vector<int>(n, INF));
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            L2[i][j] = INF;
+            for (int k = 0; k < n; k++)
+            {
+                L2[i][j] = min(L2[i][j],L[i][k] + W[k][j]);
+            }
+            
+        }
+        
+    }
+    return L2;
+     
 }
 

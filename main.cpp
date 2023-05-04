@@ -7,6 +7,8 @@
 using namespace std;
 
 int main(){
+
+
     
     //Initalisation of my graphs
 
@@ -81,6 +83,69 @@ int main(){
     graph[1]->add_edge(&edge1to4);
     graph[4]->add_edge(&edge4to2);
     
+    //GRAPH FOR DIJKSTRA
+
+    Graph DJ;
+    DJ.insert_node(6);
+
+    vector<GraphNode *> DJ_graph = DJ.getList();
+
+    //EDGES
+
+    GraphEdge DJedge0to1(DJ_graph[0],DJ_graph[1],10,&DJ);
+    GraphEdge DJedge0to3(DJ_graph[0],DJ_graph[3],5,&DJ);
+    GraphEdge DJedge4to0(DJ_graph[4],DJ_graph[0],7,&DJ);
+    GraphEdge DJedge1to3(DJ_graph[1],DJ_graph[3],2,&DJ);
+    GraphEdge DJedge3to1(DJ_graph[3],DJ_graph[1],2,&DJ);
+    GraphEdge DJedge1to2(DJ_graph[1],DJ_graph[2],1,&DJ);
+    GraphEdge DJedge3to4(DJ_graph[3],DJ_graph[4],2,&DJ);
+    GraphEdge DJedge3to2(DJ_graph[3],DJ_graph[2],9,&DJ);
+    GraphEdge DJedge4to2(DJ_graph[4],DJ_graph[2],6,&DJ);
+    GraphEdge DJedge2to4(DJ_graph[2],DJ_graph[4],4,&DJ);
+    GraphEdge DJedge2to5(DJ_graph[2],DJ_graph[5],6,&DJ);
+    GraphEdge DJedge4to5(DJ_graph[4],DJ_graph[5],3,&DJ);
+
+    DJ_graph[0]->add_edge(&DJedge0to1);
+    DJ_graph[0]->add_edge(&DJedge0to3);
+    DJ_graph[4]->add_edge(&DJedge4to0);
+    DJ_graph[1]->add_edge(&DJedge1to3);
+    DJ_graph[3]->add_edge(&DJedge3to1);
+    DJ_graph[1]->add_edge(&DJedge1to2);
+    DJ_graph[3]->add_edge(&DJedge3to4);
+    DJ_graph[3]->add_edge(&DJedge3to2);
+    DJ_graph[4]->add_edge(&DJedge4to2);
+    DJ_graph[2]->add_edge(&DJedge2to4);
+    DJ_graph[2]->add_edge(&DJedge2to5);
+    DJ_graph[4]->add_edge(&DJedge4to5);
+
+
+    //GRAPH FOR ALL PAIRS SHORTEST PATH
+
+    Graph AP;
+
+    AP.insert_node(5);
+    vector<GraphNode *> AP_graph = AP.getList();
+
+    GraphEdge APedge0to1(AP_graph[0],AP_graph[1],3,&AP);
+    GraphEdge APedge0to2(AP_graph[0],AP_graph[2],8,&AP);
+    GraphEdge APedge0to4(AP_graph[0],AP_graph[4],-4,&AP);
+    GraphEdge APedge1to4(AP_graph[1],AP_graph[4],7,&AP);
+    GraphEdge APedge1to3(AP_graph[1],AP_graph[3],1,&AP);
+    GraphEdge APedge2to1(AP_graph[2],AP_graph[1],4,&AP);
+    GraphEdge APedge3to2(AP_graph[3],AP_graph[2],-5,&AP);
+    GraphEdge APedge3to0(AP_graph[3],AP_graph[0],2,&AP);
+    GraphEdge APedge4to3(AP_graph[4],AP_graph[3],6,&AP);
+
+    AP_graph[0]->add_edge(&APedge0to1);
+    AP_graph[0]->add_edge(&APedge0to2);
+    AP_graph[0]->add_edge(&APedge0to4);
+    AP_graph[1]->add_edge(&APedge1to4);
+    AP_graph[1]->add_edge(&APedge1to3);
+    AP_graph[2]->add_edge(&APedge2to1);
+    AP_graph[3]->add_edge(&APedge3to2);
+    AP_graph[3]->add_edge(&APedge3to0);
+    AP_graph[4]->add_edge(&APedge4to3);
+
 
     cout << "Start : " << graph[0]->getId() << endl;
     graph[0]->BFS(graph);
@@ -89,7 +154,7 @@ int main(){
     graph[0]->ShortestPath(graph[4]);
     cout << endl;
 
-    graph[0]->DFS(graph);
+    //graph[0]->DFS(graph);
     /*
     cout << "Topological sort : " << endl;
     Linkedlist SortedGraph = NULL;
@@ -121,16 +186,46 @@ int main(){
     }
     
     
-    Graph A;
-    test.Kruskal(&A);
+    //Graph A;
+    //test.Kruskal(&A);
     
     cout << "Shortest path with Bellman-Ford" << endl;
     bool ford;
-    ford = test.Bellman_ford(graph[1]);
-    //graph[1]->BFS(graph);
-    cout << ford << endl;
-    cout << true << endl;
+    ford = test.Bellman_ford(graph[0]);
     graph[0]->ShortestPath(graph[4]);
-    return 0;
+    cout << endl;
     
+
+    cout << "Shortest Path with Dijkstra" << endl;
+    DJ.Dijkstra(DJ_graph[0]);
+    DJ_graph[0]->ShortestPath(DJ_graph[2]);
+    cout << endl;
+
+    cout << "Shortest path with matrix" << endl;
+    //DJ.floyd_marshall();
+    
+    vector<vector<int>> test2 = AP.ListtoMatrix();
+    
+
+    for (int i = 0; i < test2.size(); i++)
+    {
+        for (int j = 0; j < test2.size(); j++)
+        {
+            cout << test2[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << "Distance : " << endl;
+    test2 = AP.Slow_all_pairs_shortest_paths();
+    
+
+    for (int i = 0; i < test2.size(); i++)
+    {
+        for (int j = 0; j < test2.size(); j++)
+        {
+            cout << test2[i][j] << " ";
+        }
+        cout << endl;
+    }
+    return 0;
 }

@@ -188,6 +188,10 @@ void GraphNode::setPred(GraphNode* Node){
     m_pred = Node;
 }
 
+GraphNode * GraphNode::getPred() const{
+    return m_pred;
+}
+
 void GraphNode::ShortestPath(GraphNode* Destination){
     if (this == Destination)
     {
@@ -201,6 +205,22 @@ void GraphNode::ShortestPath(GraphNode* Destination){
         this->ShortestPath(Destination->m_pred); 
         cout << Destination->m_id << " ";
     }
+    
+    
+}
+
+void GraphNode::PairShortestPath(GraphNode* Destination, vector<vector<GraphNode *>> predGraph){
+    if (this->m_id == Destination->m_id)
+    {
+        cout << this->m_id << endl;
+    }else if (predGraph[this->m_id][Destination->m_id])
+    {
+        cout << "Not path from " << this->m_id << " to " << Destination->m_id << " exists" << endl;
+    }else
+    {
+        this->PairShortestPath(Destination->m_pred,predGraph);
+    }
+    
     
     
 }

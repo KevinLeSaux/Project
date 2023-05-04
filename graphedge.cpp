@@ -23,11 +23,20 @@ double GraphEdge::getWeight() const {
 void GraphEdge::relax(){
     GraphNode *u = this->m_src;
     GraphNode *v = this->m_dst;
-
-    if (u->getDist() > u->getDist() + this->m_weight)
+    /* TESTING VALUES
+    cout << " u : "<<  u->getId() << " dist : " <<u->getDist() << endl;
+    cout << " v : "<<  v->getId() << " dist : " <<v->getDist() << endl;
+    cout << " weight : " << this->m_weight << endl;
+    */
+    if (v->getDist() > u->getDist() + this->m_weight)
     {
         v->setDistance(u->getDist() + this->m_weight);
         v->setPred(u);
+        /*
+        cout << "In the if" << endl;
+        cout << " u : "<<  u->getId() << " dist : " <<u->getDist() << endl;
+        cout << " v : "<<  v->getId() << " dist : " <<v->getDist() << endl;
+        */
     }
     
 }
