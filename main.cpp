@@ -6,6 +6,8 @@
 
 using namespace std;
 
+const int INF = 0x3f3f3f3f;
+
 int main(){
 
 
@@ -13,44 +15,43 @@ int main(){
     //Initalisation of my graphs
 
     //Graph for Strongly connected component
-    /*
-    Graph test;
-    test.insert_node(8);
     
-    vector<GraphNode *> graph = test.getList();
+    Graph SCC;
+    SCC.insert_node(8);
+    
+    vector<GraphNode *> SCCgraph = SCC.getList();
     
     
     //EDGES
-    GraphEdge edge0to1(graph[0],graph[1],4,&test);
-    GraphEdge edge1to2(graph[1],graph[2],7,&test);
-    GraphEdge edge2to3(graph[2],graph[3],3,&test);
-    GraphEdge edge3to2(graph[3],graph[2],1,&test);
-    GraphEdge edge3to7(graph[3],graph[7],9,&test);
-    GraphEdge edge7to7(graph[7],graph[7],4,&test);
-    GraphEdge edge6to7(graph[6],graph[7],2,&test);
-    GraphEdge edge5to6(graph[5],graph[6],4,&test);
-    GraphEdge edge2to6(graph[2],graph[6],1,&test);
-    GraphEdge edge6to5(graph[6],graph[5],8,&test);
-    GraphEdge edge1to4(graph[1],graph[4],9,&test);
-    GraphEdge edge4to0(graph[5],graph[0],0,&test);
-    GraphEdge edge4to5(graph[4],graph[5],7,&test);
+    GraphEdge SCCedge0to1(SCCgraph[0],SCCgraph[1],7,&SCC);
+    GraphEdge SCCedge1to2(SCCgraph[1],SCCgraph[2],7,&SCC);
+    GraphEdge SCCedge2to3(SCCgraph[2],SCCgraph[3],3,&SCC);
+    GraphEdge SCCedge3to2(SCCgraph[3],SCCgraph[2],1,&SCC);
+    GraphEdge SCCedge3to7(SCCgraph[3],SCCgraph[7],9,&SCC);
+    GraphEdge SCCedge7to7(SCCgraph[7],SCCgraph[7],4,&SCC);
+    GraphEdge SCCedge6to7(SCCgraph[6],SCCgraph[7],2,&SCC);
+    GraphEdge SCCedge5to6(SCCgraph[5],SCCgraph[6],4,&SCC);
+    GraphEdge SCCedge2to6(SCCgraph[2],SCCgraph[6],1,&SCC);
+    GraphEdge SCCedge6to5(SCCgraph[6],SCCgraph[5],8,&SCC);
+    GraphEdge SCCedge1to4(SCCgraph[1],SCCgraph[4],9,&SCC);
+    GraphEdge SCCedge4to0(SCCgraph[5],SCCgraph[0],0,&SCC);
+    GraphEdge SCCedge4to5(SCCgraph[4],SCCgraph[5],7,&SCC);
     
 
-    graph[0]->add_edge(&edge0to1);
-    graph[1]->add_edge(&edge1to2);
-    graph[1]->add_edge(&edge1to4);
-    graph[2]->add_edge(&edge2to3);
-    graph[2]->add_edge(&edge2to6);
-    graph[3]->add_edge(&edge3to7);
-    graph[3]->add_edge(&edge3to2);
-    graph[4]->add_edge(&edge4to0);
-    graph[4]->add_edge(&edge4to5);
-    graph[5]->add_edge(&edge5to6);
-    graph[6]->add_edge(&edge6to5);
-    graph[6]->add_edge(&edge6to7);
-    graph[7]->add_edge(&edge7to7);
+    SCCgraph[0]->add_edge(&SCCedge0to1);
+    SCCgraph[1]->add_edge(&SCCedge1to4);
+    SCCgraph[2]->add_edge(&SCCedge2to3);
+    SCCgraph[2]->add_edge(&SCCedge2to6);
+    SCCgraph[3]->add_edge(&SCCedge3to7);
+    SCCgraph[3]->add_edge(&SCCedge3to2);
+    SCCgraph[4]->add_edge(&SCCedge4to0);
+    SCCgraph[4]->add_edge(&SCCedge4to5);
+    SCCgraph[5]->add_edge(&SCCedge5to6);
+    SCCgraph[6]->add_edge(&SCCedge6to5);
+    SCCgraph[6]->add_edge(&SCCedge6to7);
+    SCCgraph[7]->add_edge(&SCCedge7to7);
 
-    */
+    
 
     //Graph for Bellman-Ford
 
@@ -119,7 +120,7 @@ int main(){
     DJ_graph[4]->add_edge(&DJedge4to5);
 
 
-    //GRAPH FOR ALL PAIRS SHORTEST PATH
+    //GRAPH FOR ALL PAIRS SHORTEST PATH page 690 in pdf
 
     Graph AP;
 
@@ -145,6 +146,27 @@ int main(){
     AP_graph[3]->add_edge(&APedge3to2);
     AP_graph[3]->add_edge(&APedge3to0);
     AP_graph[4]->add_edge(&APedge4to3);
+
+
+    //Graph for transitive closure from page 698 in pdf
+
+    Graph TC;
+
+    TC.insert_node(4);
+
+    vector<GraphNode *> TC_graph = TC.getList();
+
+    GraphEdge TCedge3to0(TC_graph[3],AP_graph[0],0,&TC);
+    GraphEdge TCedge1to3(TC_graph[1],AP_graph[3],0,&TC);
+    GraphEdge TCedge3to2(TC_graph[3],AP_graph[2],0,&TC);
+    GraphEdge TCedge1to2(TC_graph[1],AP_graph[2],0,&TC);
+    GraphEdge TCedge2to1(TC_graph[2],AP_graph[1],0,&TC);
+
+    TC_graph[1]->add_edge(&TCedge1to3);
+    TC_graph[1]->add_edge(&TCedge1to2);
+    TC_graph[2]->add_edge(&TCedge2to1);
+    TC_graph[3]->add_edge(&TCedge3to0);
+    TC_graph[3]->add_edge(&TCedge3to2);
 
 
     cout << "Start : " << graph[0]->getId() << endl;
@@ -174,7 +196,7 @@ int main(){
    cout << endl;
    //Strongly connected component
    cout << "Strongly connected component" << endl;
-    vector<vector<GraphNode *>> component = test.SCC();
+    vector<vector<GraphNode *>> component = SCC.SCC();
     
     for (int i = 0; i < component.size(); i++)
     {
@@ -201,7 +223,7 @@ int main(){
     DJ_graph[0]->ShortestPath(DJ_graph[2]);
     cout << endl;
 
-    cout << "Shortest path with matrix" << endl;
+    cout << "Matrix W  : " << endl;
     //DJ.floyd_marshall();
     
     vector<vector<int>> test2 = AP.ListtoMatrix();
@@ -217,7 +239,7 @@ int main(){
     }
     cout << "Distance : " << endl;
     test2 = AP.Slow_all_pairs_shortest_paths();
-    
+    cout << "With Slow" << endl;
 
     for (int i = 0; i < test2.size(); i++)
     {
@@ -227,5 +249,76 @@ int main(){
         }
         cout << endl;
     }
+    vector<vector<int>> test3 = AP.Faster_all_pairs_shortest_paths();
+    cout << "With Faster : " << endl;
+
+    for (int i = 0; i < test3.size(); i++)
+    {
+        for (int j = 0; j < test3.size(); j++)
+        {
+            cout << test3[i][j] << " ";
+        }
+        cout << endl;
+    }
+    vector<vector<int>> predMat(test3.size(), vector<int>(test3.size(), INF));
+    vector<vector<int>> test4 = AP.floyd_marshall(predMat);
+    cout << "With floyd marshall : " << endl;
+
+    for (int i = 0; i < test4.size(); i++)
+    {
+        for (int j = 0; j < test4.size(); j++)
+        {
+            cout << test4[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    
+    cout << "Pred Matrix : " << endl;
+    for (int i = 0; i < predMat.size(); i++)
+    {
+        for (int j = 0; j < predMat.size(); j++)
+        {
+            cout << predMat[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << "Shortest Path from 1 to 3 (in pdf, here 0 to 2 because we start at 0)" << endl;
+    PairShortestPath(predMat,0,2);
+    cout << endl;
+
+    cout << "Transitive closure" << endl;
+    vector<vector<int>> TransitiveCLose = TC.TransitiveClosure();
+
+    for (int i = 0; i < TransitiveCLose.size(); i++)
+    {
+        for (int j = 0; j < TransitiveCLose.size(); j++)
+        {
+            cout << TransitiveCLose[i][j] << " ";
+        }
+        cout << endl;
+    }
+    
+    vector<int>testvect = {1,2};
+    testvect.push_back(3);
+    for (int i = 0; i < testvect.size(); i++)
+    {
+            cout << testvect[i];
+    }
+    
+    cout << endl;
+
+    cout << "Johnson" << endl;
+    vector<vector<int>> JohnsonDist = AP.Johnson();
+
+    for (int i = 0; i < JohnsonDist.size(); i++)
+    {
+        for (int j = 0; j < JohnsonDist.size(); j++)
+        {
+            cout << JohnsonDist[i][j] << " ";
+        }
+        cout << endl;
+    }
+
     return 0;
 }

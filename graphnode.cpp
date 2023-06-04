@@ -81,7 +81,7 @@ void GraphNode::setFinish(int time){
 bool GraphNode::getVerif() const {
     return m_visited;
     }
-
+ 
 void GraphNode::BFS(vector<GraphNode*> graph){
 
 
@@ -209,21 +209,7 @@ void GraphNode::ShortestPath(GraphNode* Destination){
     
 }
 
-void GraphNode::PairShortestPath(GraphNode* Destination, vector<vector<GraphNode *>> predGraph){
-    if (this->m_id == Destination->m_id)
-    {
-        cout << this->m_id << endl;
-    }else if (predGraph[this->m_id][Destination->m_id])
-    {
-        cout << "Not path from " << this->m_id << " to " << Destination->m_id << " exists" << endl;
-    }else
-    {
-        this->PairShortestPath(Destination->m_pred,predGraph);
-    }
-    
-    
-    
-}
+
 
 Linkedlist insert_head(Linkedlist l, GraphNode *Node){
     

@@ -40,3 +40,15 @@ void GraphEdge::relax(){
     }
     
 }
+
+void GraphEdge::setWeight(int w){
+    m_weight = w;
+}
+
+void GraphEdge::setFlow(int flow){
+    m_flow = flow;
+}
+
+int GraphEdge::getFlow() const{
+    return m_flow;
+}

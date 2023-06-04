@@ -9,6 +9,7 @@ const int INF = 0x3f3f3f3f;
 
 vector<vector<GraphNode *>> result;
 
+
 void Graph::insert_node(int nbVert){
     //VERTICES
     for (int i = 0; i < nbVert; i++)
@@ -302,26 +303,55 @@ void Graph::Dijkstra(GraphNode *source){
     
 }
 
-void Graph::floyd_marshall(){
-    //GET THE ADJACENCY MATRIX OF THE GRAPH
-    vector<vector<int>> graph = this->ListtoMatrix();
+vector<vector<int>> Graph::floyd_marshall(vector<vector<int>>& pred){
+    //GET W
+    vector<vector<int>> W = this->ListtoMatrix();
     //N NUMBER OF ROWS/COLUMN
-    int n = graph.size();
+    int n = W.size();
     //D = W
-    vector<vector<int>> D = graph;
+    vector<vector<int>> D = W;
+    vector<GraphNode *> Vlist;
 
     for (int k = 0; k < n; k++)
     {
+        
+        
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
             {
+                if (k == 0)
+                {
+                    
+                    if (i==j || W[i][j] == INF)
+                    {
+                        
+                        pred[i][j] = INF;
+                    }else if (i != j && W[i][j] < INF)
+                    {
+                        
+                        pred[i][j] = i+1;
+                    }
+                    
+                }
+                if (D[i][j] <= D[i][k] + D[k][j])
+                {
+                    pred[i][j] = pred[i][j];
+                }else if (D[i][j] > D[i][k] + D[k][j])
+                {
+                    pred[i][j] = pred[k][j];
+                }
+                
+                
+                
                 D[i][j] = min(D[i][j],D[i][k] + D[k][j]);
+                
             }
             
         }
         
     }
+    return D;
     
 }
 
@@ -377,6 +407,19 @@ vector<vector<int>> Graph::Slow_all_pairs_shortest_paths(){
     
 }
 
+vector<vector<int>> Graph::Faster_all_pairs_shortest_paths(){
+    vector<vector<int>> W = this->ListtoMatrix();
+    int n = W.size();
+    vector<vector<int>> L = W;
+    int m = 1;
+    while (m < n - 1)
+    {
+        L = Extended_shortest_path(L,L);
+        m = 2*m;
+    }
+    return L;
+}
+
 vector<vector<int>> Extended_shortest_path(vector<vector<int>> L, vector<vector<int>> W){
     int n = L.size();
     vector<vector<int>> L2(n, vector<int>(n, INF));
@@ -398,3 +441,170 @@ vector<vector<int>> Extended_shortest_path(vector<vector<int>> L, vector<vector<
      
 }
 
+void PairShortestPath(vector<vector<int>> pred, int i, int j){
+    if (i == j)
+    {   
+        // I add 1 so I can compare to the graph in the pdf
+        cout << i + 1;
+    }else if (pred[i][j] == INF)
+    {
+        cout << "Not path from " << i << " to " << j << " exists" << endl;
+    }else
+    {
+        PairShortestPath(pred,i,pred[i][j]-1);
+        cout << j + 1;
+    }
+    
+    
+    
+}
+vector<vector<int>> Graph::TransitiveClosure(){
+    int n = this->getList().size();
+    bool verif = false;
+
+    vector<vector<int>> prevT;
+    vector<GraphNode *> NodeList = this->getList();
+    vector<vector<int>> T(n, vector<int>(n, 0));
+    for (int i = 0; i < n; i++)
+    {
+
+        for (int j = 0; j < n; j++)
+        {
+
+            vector<GraphNode *> Neighbors = NodeList[i]->SNQ();
+
+            for (int l = 0; l < Neighbors.size(); l++)
+            {
+                if (Neighbors[l]->getId() == j)
+                {
+                    verif = true;
+                }
+                
+            }
+            //cout << i << " " << j << " "<< verif << endl;
+            if (i == j || verif)
+            {
+                T[i][j] = 1;
+
+            }else
+            {
+                T[i][j] = 0; 
+            }
+
+            verif = false;
+        }
+        
+    }
+
+    for (int k = 0; k < n; k++)
+    {
+        vector<vector<int>> nextT(n, vector<int>(n, 0)); 
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                nextT[i][j] = T[i][j] || (T[i][k] && T[k][j]);
+            }
+            
+        }
+        T = nextT;
+
+    }
+    return T;
+}
+
+vector<vector<int>> Graph::Johnson(){
+    Graph* G2 = this;
+    vector<int> h(G2->getList().size(),INF);
+    GraphNode newNode(G2->getList().size());
+    vector<GraphNode *> Vlist = this->getList();
+    G2->insert_vert(&newNode);
+    int compteur = Vlist.size();
+    for (int i = 0; i < Vlist.size(); i++)
+    {
+        auto edge = new GraphEdge(&newNode, Vlist[i],0,G2);
+        newNode.add_edge(edge);
+    }
+
+    if (!G2->Bellman_ford(&newNode))
+    {
+        cout << "the input graph contain a negative-weight cycle" << endl;
+    }else
+    {
+        vector<GraphNode *> Nodelist = G2->getList(); 
+        int weight;
+        //Line 4
+        /*for (int i = 0; i < Nodelist.size(); i++)
+        {
+            G2->Bellman_ford(Nodelist[i]);
+            vector<GraphEdge* > Edge = newNode.getEdges();
+            for (int j = 0; j < newNode.getEdges().size(); j++)
+            {
+                if (Edge[j]->getDst()->getId() == Nodelist[i]->getId())
+                {
+                    weight = Edge[j]->getWeight();
+                }
+                
+            }
+            
+            h[Nodelist[i]->getId()] = weight;
+
+        }*/
+        //Line 6
+        vector<GraphEdge *> EdgeList = G2->getEdgeList();
+        for (int i = 0; i < EdgeList.size(); i++)
+        {
+            EdgeList[i]->setWeight(EdgeList[i]->getWeight() +  h[EdgeList[i]->getSrc()->getId()] - h[EdgeList[i]->getDst()->getId()]);
+        }
+
+        vector<vector<int>> D(this->getList().size() - 1, vector<int>(this->getList().size() - 1, 0));
+        //Line 9
+        Nodelist.pop_back();
+        Nodelist = this->getList();
+        Nodelist.pop_back();
+        cout << Nodelist.size() << endl;
+        cout << this->getList().size()<<endl;
+        bool existed = false;
+        vector<int> distance(Nodelist.size(),INF);
+        for (int i = 0; i < Nodelist.size(); i++)
+        {
+            G2->Dijkstra(Nodelist[i]);
+            distance[Nodelist[i]->getId()] = Nodelist[i]->getDist();
+            for (int j = 0; j < Nodelist.size(); j++)
+            {   
+                D[i][j] = distance[j] + h[Nodelist[j]->getId()] - h[Nodelist[i]->getId()];
+                
+            }
+                            
+                
+
+        }
+        
+        return D;
+        
+    }
+    
+    
+    
+}
+
+void Graph::insert_vert(GraphNode* Node){
+    v_list.push_back(Node);
+}
+
+void Graph::FordFulkerson(GraphNode* source, GraphNode* sink){
+    int residual;
+    vector<GraphEdge *>EdgeList = this->getEdgeList();
+    for (int i = 0; i < EdgeList.size(); i++)
+    {
+        EdgeList[i]->setFlow(0);
+    }
+    vector<GraphNode* > Vlist = this->getList();
+    source->BFS(Vlist);
+    while (sink->getVerif())
+    {
+        
+    }
+    
+    
+}

@@ -76,7 +76,7 @@ class GraphNode
         
 
 };
-
+void PairShortestPath(std::vector<std::vector<int>> pred, int i, int j);
 void DFS_VISIT(GraphNode* Node);
 
 //GRAPH EDGE
@@ -89,16 +89,20 @@ class GraphEdge
 
         //Mutator
         void relax();
+        void setWeight(int w);
+        void setFlow(int flow);
 
         //Accessors
         GraphNode* getSrc() const;
         GraphNode* getDst() const;
         double getWeight() const;
+        int getFlow() const;
 
     private:
         GraphNode* m_src;
         GraphNode* m_dst;
         double m_weight;
+        int m_flow;
         
 
 };
@@ -118,8 +122,13 @@ class Graph
         void DAG_shortest_paths(GraphNode *source);
         //NONNEGATIVE WEIGHT
         void Dijkstra(GraphNode *source);
-        void floyd_marshall();
+        std::vector<std::vector<int>> floyd_marshall(std::vector<std::vector<int>>& pred);
         std::vector<std::vector<int>> Slow_all_pairs_shortest_paths();
+        std::vector<std::vector<int>> Faster_all_pairs_shortest_paths();
+        std::vector<std::vector<int>> TransitiveClosure();
+        std::vector<std::vector<int>> Johnson();
+        void insert_vert(GraphNode* Node);
+        void FordFulkerson(GraphNode* source, GraphNode* sink);
 
         //ACCESSOR
         std::vector<GraphNode *> getList();
@@ -129,6 +138,7 @@ class Graph
         void Kruskal(Graph* temp);
         void MST_PRIM(Graph* temp, GraphNode* start);
         std::vector<std::vector<int>> ListtoMatrix();
+        
 
     private :
         std::vector<GraphNode *> v_list;
