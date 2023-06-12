@@ -529,6 +529,8 @@ vector<vector<int>> Graph::Johnson(){
     if (!G2->Bellman_ford(&newNode))
     {
         cout << "the input graph contain a negative-weight cycle" << endl;
+        vector<vector<int>> def(G2->getList().size(), vector<int>(G2->getList().size(), INF)); 
+        return def;
     }else
     {
         vector<GraphNode *> Nodelist = G2->getList(); 

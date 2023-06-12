@@ -14,7 +14,7 @@ int main(){
     
     //Initalisation of my graphs
 
-    //Graph for Strongly connected component
+    //Graph for Strongly connected component page 616 on pdf
     
     Graph SCC;
     SCC.insert_node(8);
@@ -53,25 +53,25 @@ int main(){
 
     
 
-    //Graph for Bellman-Ford
+    //Graph for Bellman-Ford page 652 on pdf
 
-    Graph test;
-    test.insert_node(5);
+    Graph bellman;
+    bellman.insert_node(5);
 
-    vector<GraphNode *> graph = test.getList();
+    vector<GraphNode *> graph = bellman.getList();
 
     //EDGES
 
-    GraphEdge edge0to1(graph[0],graph[1],6,&test);
-    GraphEdge edge0to3(graph[0],graph[3],7,&test);
-    GraphEdge edge4to0(graph[4],graph[0],2,&test);
-    GraphEdge edge1to3(graph[1],graph[3],8,&test);
-    GraphEdge edge1to2(graph[1],graph[2],5,&test);
-    GraphEdge edge2to1(graph[2],graph[1],-2,&test);
-    GraphEdge edge3to4(graph[3],graph[4],9,&test);
-    GraphEdge edge3to2(graph[3],graph[2],-3,&test);
-    GraphEdge edge1to4(graph[1],graph[4],-4,&test);
-    GraphEdge edge4to2(graph[4],graph[2],7,&test);
+    GraphEdge edge0to1(graph[0],graph[1],6,&bellman);
+    GraphEdge edge0to3(graph[0],graph[3],7,&bellman);
+    GraphEdge edge4to0(graph[4],graph[0],2,&bellman);
+    GraphEdge edge1to3(graph[1],graph[3],8,&bellman);
+    GraphEdge edge1to2(graph[1],graph[2],5,&bellman);
+    GraphEdge edge2to1(graph[2],graph[1],-2,&bellman);
+    GraphEdge edge3to4(graph[3],graph[4],9,&bellman);
+    GraphEdge edge3to2(graph[3],graph[2],-3,&bellman);
+    GraphEdge edge1to4(graph[1],graph[4],-4,&bellman);
+    GraphEdge edge4to2(graph[4],graph[2],7,&bellman);
 
     graph[0]->add_edge(&edge0to1);
     graph[0]->add_edge(&edge0to3);
@@ -84,7 +84,7 @@ int main(){
     graph[1]->add_edge(&edge1to4);
     graph[4]->add_edge(&edge4to2);
     
-    //GRAPH FOR DIJKSTRA
+    //GRAPH FOR DIJKSTRA page 659 on pdf
 
     Graph DJ;
     DJ.insert_node(6);
@@ -97,7 +97,7 @@ int main(){
     GraphEdge DJedge0to3(DJ_graph[0],DJ_graph[3],5,&DJ);
     GraphEdge DJedge4to0(DJ_graph[4],DJ_graph[0],7,&DJ);
     GraphEdge DJedge1to3(DJ_graph[1],DJ_graph[3],2,&DJ);
-    GraphEdge DJedge3to1(DJ_graph[3],DJ_graph[1],2,&DJ);
+    GraphEdge DJedge3to1(DJ_graph[3],DJ_graph[1],3,&DJ);
     GraphEdge DJedge1to2(DJ_graph[1],DJ_graph[2],1,&DJ);
     GraphEdge DJedge3to4(DJ_graph[3],DJ_graph[4],2,&DJ);
     GraphEdge DJedge3to2(DJ_graph[3],DJ_graph[2],9,&DJ);
@@ -208,12 +208,11 @@ int main(){
     }
     
     
-    //Graph A;
-    //test.Kruskal(&A);
+    
     
     cout << "Shortest path with Bellman-Ford" << endl;
     bool ford;
-    ford = test.Bellman_ford(graph[0]);
+    ford = bellman.Bellman_ford(graph[0]);
     graph[0]->ShortestPath(graph[4]);
     cout << endl;
     
